@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/auth";
-import { LayoutGrid, Plus } from "lucide-react";
+import { LayoutGrid } from "lucide-react";
 import { NewBoardButton } from "@/components/boards/NewBoardButton";
 
 type SidebarBoard = { id: string; title: string; color: string; icon: string | null };
 
-async function getSidebarBoards(userId: string): Promise<{ myBoards: SidebarBoard[]; teamBoards: SidebarBoard[] }> {
+async function getSidebarBoards(): Promise<{ myBoards: SidebarBoard[]; teamBoards: SidebarBoard[] }> {
   const [myBoards, teamBoards] = await Promise.all([
     prisma.board.findMany({
-      where: { ownerId: userId, visibility: "PRIVATE" },
+      where: { visibility: "PRIVATE" },
       orderBy: { updatedAt: "desc" },
       select: { id: true, title: true, color: true, icon: true },
     }),
@@ -23,10 +22,7 @@ async function getSidebarBoards(userId: string): Promise<{ myBoards: SidebarBoar
 }
 
 export async function Sidebar() {
-  const session = await auth();
-  if (!session) return null;
-
-  const { myBoards, teamBoards } = await getSidebarBoards(session.user.id);
+  const { myBoards, teamBoards } = await getSidebarBoards();
 
   return (
     <aside className="w-60 shrink-0 h-full bg-background border-r flex flex-col overflow-y-auto">
@@ -50,10 +46,7 @@ export async function Sidebar() {
                   href={`/boards/${board.id}`}
                   className="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm hover:bg-accent transition-colors"
                 >
-                  <span
-                    className="w-3 h-3 rounded-sm shrink-0"
-                    style={{ backgroundColor: board.color }}
-                  />
+                  <span className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: board.color }} />
                   <span className="truncate">{board.icon ? `${board.icon} ` : ""}{board.title}</span>
                 </Link>
               </li>
@@ -73,10 +66,7 @@ export async function Sidebar() {
                   href={`/boards/${board.id}`}
                   className="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm hover:bg-accent transition-colors"
                 >
-                  <span
-                    className="w-3 h-3 rounded-sm shrink-0"
-                    style={{ backgroundColor: board.color }}
-                  />
+                  <span className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: board.color }} />
                   <span className="truncate">{board.icon ? `${board.icon} ` : ""}{board.title}</span>
                 </Link>
               </li>

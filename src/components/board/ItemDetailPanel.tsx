@@ -7,7 +7,6 @@ import { Separator } from "@/components/ui/separator";
 import { Column } from "@/types/board";
 import { CellRenderer } from "./cells/CellRenderer";
 import { CommentList } from "./comments/CommentList";
-import { useSession } from "next-auth/react";
 
 type Author = { id: string; name: string | null; email: string; avatarUrl: string | null };
 type Comment = { id: string; body: string; deletedAt: string | null; createdAt: string; updatedAt: string; author: Author };
@@ -29,7 +28,6 @@ type Props = {
 };
 
 export function ItemDetailPanel({ itemId, boardColumns, onClose, onItemUpdate, onCellSave }: Props) {
-  const { data: session } = useSession();
   const [item, setItem] = useState<ItemDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [titleDraft, setTitleDraft] = useState("");
@@ -146,7 +144,7 @@ export function ItemDetailPanel({ itemId, boardColumns, onClose, onItemUpdate, o
                 <CommentList
                   itemId={item.id}
                   initialComments={item.comments}
-                  currentUserId={session?.user?.id ?? ""}
+                  currentUserId=""
                 />
               </div>
             </ScrollArea>

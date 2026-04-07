@@ -1,14 +1,12 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { BoardCard } from "@/components/boards/BoardCard";
 import type { Board } from "@/components/boards/BoardCard";
 import { NewBoardButton } from "@/components/boards/NewBoardButton";
 
-async function getBoards(userId: string) {
+async function getBoards() {
   const [myBoards, teamBoards] = await Promise.all([
     prisma.board.findMany({
-      where: { ownerId: userId, visibility: "PRIVATE" },
+      where: { visibility: "PRIVATE" },
       include: { owner: { select: { id: true, name: true, email: true, avatarUrl: true } } },
       orderBy: { updatedAt: "desc" },
     }),
@@ -22,10 +20,7 @@ async function getBoards(userId: string) {
 }
 
 export default async function BoardsPage() {
-  const session = await auth();
-  if (!session) redirect("/login");
-
-  const { myBoards, teamBoards } = await getBoards(session.user.id);
+  const { myBoards, teamBoards } = await getBoards();
 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-8">
@@ -43,8 +38,8 @@ export default async function BoardsPage() {
           <p className="text-sm text-muted-foreground py-4">No private boards yet. Create one to get started.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {myBoards.map((board) => (
-              <BoardCard key={board.id} board={board as Board} />
+            {(myBoards as Board[]).map((board) => (
+              <BoardCard key={board.id} board={board} />
             ))}
           </div>
         )}
@@ -59,8 +54,8 @@ export default async function BoardsPage() {
           <p className="text-sm text-muted-foreground py-4">No shared boards yet.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {teamBoards.map((board) => (
-              <BoardCard key={board.id} board={board as Board} />
+            {(teamBoards as Board[]).map((board) => (
+              <BoardCard key={board.id} board={board} />
             ))}
           </div>
         )}
