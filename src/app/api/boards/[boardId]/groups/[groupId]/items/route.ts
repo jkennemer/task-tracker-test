@@ -29,7 +29,6 @@ export async function POST(
       groupId,
       title: title.trim(),
       position: (lastItem?.position ?? 0) + 1,
-      createdBy: session.user.id,
     },
     include: { columnValues: true },
   });

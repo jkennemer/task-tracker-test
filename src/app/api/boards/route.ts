@@ -1,16 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, errorResponse } from "@/lib/api-helpers";
+import { errorResponse } from "@/lib/api-helpers";
 
 export async function GET() {
-  const { session, error } = await requireAuth();
-  if (error) return error;
-
-  const userId = session.user.id;
-
   const [myBoards, teamBoards] = await Promise.all([
     prisma.board.findMany({
-      where: { ownerId: userId, visibility: "PRIVATE" },
+      where: { visibility: "PRIVATE" },
       include: { owner: { select: { id: true, name: true, email: true, avatarUrl: true } } },
       orderBy: { updatedAt: "desc" },
     }),
@@ -25,9 +20,6 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { session, error } = await requireAuth();
-  if (error) return error;
-
   const body = await req.json();
   const { title, description, visibility, color, icon } = body;
 
@@ -40,7 +32,6 @@ export async function POST(req: NextRequest) {
       visibility: visibility === "SHARED" ? "SHARED" : "PRIVATE",
       color: color || "#0ea5e9",
       icon: icon || null,
-      ownerId: session.user.id,
       groups: {
         create: {
           title: "Tasks",

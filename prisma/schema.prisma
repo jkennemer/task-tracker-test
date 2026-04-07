@@ -92,11 +92,11 @@ model Board {
   visibility  Visibility @default(PRIVATE)
   color       String   @default("#0ea5e9")
   icon        String?
-  ownerId     String
+  ownerId     String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  owner   User     @relation("BoardOwner", fields: [ownerId], references: [id])
+  owner   User?    @relation("BoardOwner", fields: [ownerId], references: [id])
   groups  Group[]
   columns Column[]
 }
@@ -136,7 +136,7 @@ model Item {
   groupId   String
   title     String
   position  Float    @default(0)
-  createdBy String
+  createdBy String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -162,24 +162,24 @@ model ColumnValue {
 model Comment {
   id        String    @id @default(cuid())
   itemId    String
-  authorId  String
+  authorId  String?
   body      String    @db.Text
   deletedAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
   item   Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  author User @relation(fields: [authorId], references: [id])
+  author User? @relation(fields: [authorId], references: [id])
 }
 
 model ActivityLog {
   id        String   @id @default(cuid())
   itemId    String
-  actorId   String
+  actorId   String?
   event     String
   meta      Json?
   createdAt DateTime @default(now())
 
   item  Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  actor User @relation(fields: [actorId], references: [id])
+  actor User? @relation(fields: [actorId], references: [id])
 }

@@ -35,7 +35,7 @@ export async function POST(
   if (!commentBody?.trim()) return errorResponse("Comment body is required");
 
   const comment = await prisma.comment.create({
-    data: { itemId, authorId: session.user.id, body: commentBody.trim() },
+    data: { itemId, body: commentBody.trim() },
     include: { author: { select: { id: true, name: true, email: true, avatarUrl: true } } },
   });
 
