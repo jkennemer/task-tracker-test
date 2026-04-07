@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { prisma } from "@/lib/prisma";
 import { BoardCard } from "@/components/boards/BoardCard";
 import type { Board } from "@/components/boards/BoardCard";
