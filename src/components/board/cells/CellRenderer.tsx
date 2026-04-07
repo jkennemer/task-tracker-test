@@ -1,6 +1,6 @@
 "use client";
 
-import { ColumnType } from "@/generated/prisma";
+import { ColumnType } from "@prisma/client";
 import { Column } from "@/types/board";
 import { TextCell } from "./TextCell";
 import { NumberCell } from "./NumberCell";

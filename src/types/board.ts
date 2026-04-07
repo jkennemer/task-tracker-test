@@ -1,4 +1,4 @@
-import { ColumnType } from "@/generated/prisma";
+import { ColumnType } from "@prisma/client";
 
 export type User = {
   id: string;

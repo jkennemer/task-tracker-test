@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ColumnType } from "@/generated/prisma";
+import { ColumnType } from "@prisma/client";
 import { Column } from "@/types/board";
 import { Type, Hash, CircleDot, Calendar, Users, Link, CheckSquare } from "lucide-react";
 

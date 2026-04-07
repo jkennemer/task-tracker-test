@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, errorResponse } from "@/lib/api-helpers";
-import { ColumnType } from "@/generated/prisma";
+import { ColumnType } from "@prisma/client";
 
 const VALID_TYPES = Object.values(ColumnType);
 
